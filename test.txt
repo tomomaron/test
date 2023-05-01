@@ -1,1 +1,2 @@
 maron & reon
+今日はPythonの勉強をした。
