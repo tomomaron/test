@@ -7,7 +7,7 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
-def setup_all_sed(seed=0):
+def setup_all_seed(seed=0):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -28,10 +28,10 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(hidden2_size, output_size)
         
     def forward(self, x):
-        z1 = F.relu(self.fc1(x))
-        z2 = F.relu(z1)
-        y = self.fc3(z1)
-        return y
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
     
 input_size = 28*28
 hidden1_size = 1024
@@ -99,7 +99,7 @@ def learning(model, train_loader, test_loader, criterion, optimizer, num_epochs,
     train_loss_list = []
     test_loss_list = []
     
-    for epoch in range(1, num_epochs+1, 1):
+    for epoch in range(num_epochs):
         train_loss = train_model(model, train_loader, criterion, optimizer, device=device)
         test_loss = test_model(model, test_loader, criterion, device=device)
         
@@ -110,6 +110,7 @@ def learning(model, train_loader, test_loader, criterion, optimizer, num_epochs,
     
     return train_loss_list, test_loss_list
 
+setup_all_seed()
 num_epochs = 10
 train_loss_list, test_loss_list = learning(model, train_loader, test_loader, criterion, optimizer, num_epochs, device=device)
 
