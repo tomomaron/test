@@ -24,18 +24,28 @@ class Net(nn.Module):
     def __init__(self, input_size, hidden1_size, hidden2_size, output_size):
         super(Net, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden1_size)
+        self.bn1 = nn.BatchNorm1d(hidden1_size)
         self.fc2 = nn.Linear(hidden1_size, hidden2_size)
+        self.bn2 = nn.BatchNorm1d(hidden2_size)
         self.fc3 = nn.Linear(hidden2_size, output_size)
         
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        # # Batch Normalizationなし
+        # x = F.relu(self.fc1(x))
+        # x = F.relu(self.fc2(x))
+        # x = self.fc3(x)
+        
+        # Batch Normalizationあり
+        x = self.fc1(x)
+        x = F.relu(self.bn1(x))
+        x = self.fc2(x)
+        x = F.relu(self.bn2(x))
         x = self.fc3(x)
         return x
     
 input_size = 28*28
-hidden1_size = 1024
-hidden2_size = 512
+hidden1_size = 100
+hidden2_size = 50
 output_size = 10
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
