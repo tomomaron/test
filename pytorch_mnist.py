@@ -58,7 +58,7 @@ def train_model(model, train_loader, criterion, optimizer, device='cpu'):
         optimizer.zero_grad()
         
         #推論(順伝播)
-        outputs = model.forward(images)
+        outputs = model(images)
         
         #損失の算出
         loss = criterion(outputs, labels)
